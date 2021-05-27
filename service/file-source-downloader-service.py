@@ -4,8 +4,8 @@ import io
 import requests
 import os
 import logger
-import cherrypy
 import ujson
+import cherrypy.process.plugins
 
 app = Flask(__name__)
 logger = logger.Logger('file-source-downloader-service')
@@ -14,7 +14,14 @@ headers = ujson.loads('{"Content-Type": "application/json"}')
 download_url = os.environ.get("download_url")
 exposed_filename = os.environ.get("exposed_filename")
 is_zip_file = os.environ.get("is_zip_file", "false") == "true"
+reload = os.environ.get("reload", "true") == "true"
 tmp_filename = f"tmp_{exposed_filename}.json"
+
+try:
+    sleep_interval = int(os.environ.get("sleep_interval", 86400))
+except (ValueError, TypeError):
+    logger.warning('sleep_interval not set to valid int or string containing int! Setting to default = 86400 (24 hours).')
+    sleep_interval = 86400
 
 
 class DataAccess:
@@ -78,6 +85,9 @@ def get():
 
 if __name__ == '__main__':
     download_file()
+
+    wd = cherrypy.process.plugins.BackgroundTask(sleep_interval, download_file)
+    wd.start()
 
     cherrypy.tree.graft(app, '/')
 

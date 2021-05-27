@@ -12,6 +12,10 @@ A service that can be used to download a file from an external source, store it 
 
 `is_zip_file` - set this to true if the external file is a zip file, the service will then unzip the contents before storing it in the local file.
 
+`reload` - determines if the external file should be reloaded at given intervals (set by the sleep_interval setting), default value: true.
+
+`sleep_interval` - the number of seconds to wait before the service will download the external file again, default value: 86400.
+
 ### Querystring parameters:
 
 `force_refresh_` - if set to true will download the external file upon request.
@@ -29,7 +33,7 @@ A service that can be used to download a file from an external source, store it 
       "exposed_filename": "filename"
     },
     "image": "sesamcommunity/file-source-downloader-service:latest",
-    "port": 5001
+    "port": 5002
   }
 }
 
@@ -47,7 +51,7 @@ A service that can be used to download a file from an external source, store it 
     "supports_since": false,
     "system": "file-source-download-system",
     "type": "json",
-    "url": ""
+    "url": "/"
   }
 }
 
