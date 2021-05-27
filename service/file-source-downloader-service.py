@@ -48,6 +48,8 @@ def download_file():
         else:
             open(tmp_filename, 'wb').write(r.content)
 
+        logger.info(f"File downloaded from url: {download_url}")
+
 
 def stream_json(data):
     first = True
@@ -63,6 +65,7 @@ def stream_json(data):
 
 @app.route("/", methods=["GET"])
 def get():
+    logger.info(f"Fetching data from '{tmp_filename}'")
     if request.args.get("force_refresh") is not None:
         force_refresh = request.args["force_refresh"]
         if force_refresh == "true":
@@ -74,7 +77,7 @@ def get():
 
 
 if __name__ == '__main__':
-    #download_file()
+    download_file()
 
     cherrypy.tree.graft(app, '/')
 
