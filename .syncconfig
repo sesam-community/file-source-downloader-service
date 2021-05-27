@@ -1,0 +1,7 @@
+.syncconfig
+*.pyc
+.idea
+.env
+env_*
+.DS_Store
+service/tmp_*
