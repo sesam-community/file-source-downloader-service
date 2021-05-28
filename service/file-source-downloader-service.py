@@ -5,6 +5,7 @@ import requests
 import os
 import logger
 import ujson
+import ijson
 import cherrypy.process.plugins
 
 app = Flask(__name__)
@@ -26,13 +27,21 @@ except (ValueError, TypeError):
 
 class DataAccess:
 
-    def __get_all_entities(self):
+    def __get_all_entities_old(self):
         json_file = open(tmp_filename, 'rb')
         json_content = json_file.read()
         entities = ujson.loads(json_content.decode('utf-8'))
 
         if isinstance(entities, dict):
             entities = [entities]
+
+        for entity in entities:
+            if entity is not None:
+                yield (entity)
+
+    def __get_all_entities(self):
+        json_file = open(tmp_filename)
+        entities = ijson.items(json_file, 'item')
 
         for entity in entities:
             if entity is not None:
